@@ -2,6 +2,9 @@
 
 import { connectToDatabase } from "@/database/mongoose";
 import Watchlist from "@/database/models/watchlist.model";
+import { auth } from "@/lib/better-auth/auth";
+import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const getWatchlistSymbolsByEmail = async (
   email: string
@@ -32,5 +35,63 @@ export const getWatchlistSymbolsByEmail = async (
   } catch (error) {
     console.error("Error fetching watchlist symbols by email:", error);
     return [];
+  }
+};
+
+export const addToWatchlist = async (symbol: string, company: string) => {
+  try {
+    await connectToDatabase();
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = session.user.id;
+
+    // Check if already exists
+    const existing = await Watchlist.findOne({ userId, symbol: symbol.toUpperCase() });
+    if (existing) {
+      return { success: true, message: "Already in watchlist" };
+    }
+
+    await Watchlist.create({
+      userId,
+      symbol: symbol.toUpperCase(),
+      company,
+    });
+
+    revalidatePath("/watchlist");
+    return { success: true, message: "Added to watchlist" };
+  } catch (error) {
+    console.error("Error adding to watchlist:", error);
+    throw new Error("Failed to add to watchlist");
+  }
+};
+
+export const removeFromWatchlist = async (symbol: string) => {
+  try {
+    await connectToDatabase();
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = session.user.id;
+
+    await Watchlist.deleteOne({ userId, symbol: symbol.toUpperCase() });
+
+    revalidatePath("/watchlist");
+    return { success: true, message: "Removed from watchlist" };
+  } catch (error) {
+    console.error("Error removing from watchlist:", error);
+    throw new Error("Failed to remove from watchlist");
   }
 };
