@@ -49,7 +49,7 @@ const UserDropdown = ({
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="text-gray-400">
+      <DropdownMenuContent className="text-gray-400 bg-gray-800">
         <DropdownMenuLabel>
           <div className="flex relative items-center gap-3 py-2">
             <Avatar className="h-10 w-10">

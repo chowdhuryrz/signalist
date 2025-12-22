@@ -216,6 +216,33 @@ declare global {
         threshold: number;
         changePercent?: number;
     };
+
+    type AlertItem = {
+        _id: string;
+        userId: string;
+        symbol: string;
+        company: string;
+        alertName: string;
+        alertType: 'upper' | 'lower';
+        threshold: number;
+        cadence: 'once' | 'daily' | 'weekly';
+        isActive: boolean;
+        createdAt: Date;
+        lastTriggered?: Date;
+    };
+
+    type EnrichedAlert = {
+        id: string;
+        symbol: string;
+        company: string;
+        alertName: string;
+        currentPrice: number;
+        changePercent?: number;
+        alertType: 'upper' | 'lower';
+        threshold: number;
+        cadence: 'once' | 'daily' | 'weekly';
+        isActive: boolean;
+    };
 }
 
 export {};
