@@ -38,7 +38,7 @@ export default function SearchCommand({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     if (!isSearchMode) return setStocks(initialStocks);
 
     setLoading(true);
@@ -50,13 +50,13 @@ export default function SearchCommand({
     } finally {
       setLoading(false);
     }
-  };
+  }, [isSearchMode, searchTerm, initialStocks]);
 
   const debouncedSearch = useDebounce(handleSearch, 300);
 
   useEffect(() => {
     debouncedSearch();
-  }, [searchTerm]);
+  }, [debouncedSearch]);
 
   const handleSelectStock = () => {
     setOpen(false);
