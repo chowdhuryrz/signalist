@@ -13,15 +13,21 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
 import NavItems from "./NavItems";
+import { signOut } from "@/lib/actions/auth.actions";
 
-const UserDropdown = () => {
+const UserDropdown = ({
+  user,
+  initialStocks,
+}: {
+  user: User;
+  initialStocks: StockWithWatchlistStatus[];
+}) => {
   const router = useRouter();
 
   const handleSignOut = async () => {
+    await signOut();
     router.push("/sign-in");
   };
-
-  const user = { name: "John", email: "contact@northflowsystems.com" };
 
   return (
     <DropdownMenu>
@@ -31,7 +37,7 @@ const UserDropdown = () => {
           className="flex items-center gap-3 text-gray-400 hover:text-yellow-500"
         >
           <Avatar className="h-8 w-8">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={user.image} alt={user.name} />
             <AvatarFallback className="bg-yellow-500 text-yellow-900 text-sm font-bold">
               {user.name[0]}
             </AvatarFallback>
@@ -43,11 +49,11 @@ const UserDropdown = () => {
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="text-gray-400">
+      <DropdownMenuContent className="text-gray-400 bg-gray-800">
         <DropdownMenuLabel>
           <div className="flex relative items-center gap-3 py-2">
             <Avatar className="h-10 w-10">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={user.image} alt={user.name} />
               <AvatarFallback className="bg-yellow-500 text-yellow-900 text-sm font-bold">
                 {user.name[0]}
               </AvatarFallback>
@@ -70,7 +76,7 @@ const UserDropdown = () => {
         </DropdownMenuItem>
         <DropdownMenuSeparator className="hidden sm:block bg-gray-600" />
         <nav className="sm:hidden">
-          <NavItems />
+          <NavItems initialStocks={initialStocks} />
         </nav>
       </DropdownMenuContent>
     </DropdownMenu>

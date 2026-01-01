@@ -148,7 +148,7 @@
   }
 
   .yellow-btn {
-    @apply h-12 cursor-pointer bg-gradient-to-b from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-gray-950 font-medium text-base rounded-lg shadow-lg disabled:opacity-50;
+    @apply h-11 cursor-pointer bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-semibold text-base rounded transition-colors disabled:opacity-50;
   }
 
   .home-wrapper {
